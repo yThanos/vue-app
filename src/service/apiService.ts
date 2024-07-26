@@ -2,7 +2,7 @@ import axios, { AxiosInstance } from 'axios';
 import { useUserStore } from 'src/stores/userStore';
 
 export default function useApi() {
-  const API = 'http://server:8080/'; //'http://172.27.32.177:8080/';
+  const API = 'http://localhost:8080/'; //'http://172.27.32.177:8080/';
 
   const api: AxiosInstance = axios.create({ baseURL: API });
 
