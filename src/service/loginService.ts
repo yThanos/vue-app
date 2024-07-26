@@ -4,19 +4,22 @@ import { User } from 'src/model/interfaces';
 
 const store = useUserStore();
 
-export async function login(login: string, senha: string): Promise<boolean> {
+export async function login(username: string, password: string): Promise<boolean> {
   const { api } = useApi();
   try {
-    const response = await api.post('/auth/login', { login, senha });
-    const { token } = response.data;
+    const response = await api.post('/auth/login', { username, password });
+    const { token, name, id } = response.data;
     console.log(token);
     if (token) {
       store.setUser({
-        email: login,
+        id: id,
+        username: username,
         token,
-        name: '',
+        name: name,
         password: '',
+        permissions: []
       });
+      store.setLogged(true);
       return true;
     } else {
       throw new Error('Token not received');
@@ -29,7 +32,7 @@ export async function login(login: string, senha: string): Promise<boolean> {
 
 export function createAcc(user: User) {
   const { api } = useApi();
-  return api.post('/users', user);
+  return api.post('/auth/create', user);
 }
 
 export function logout() {

@@ -1,11 +1,14 @@
 import { defineStore } from 'pinia';
 import { User } from 'src/model/interfaces';
+import { useRouter } from 'vue-router';
 
 const defaultUser: User = {
+  id: 0,
   name: '',
-  email: '',
+  username: '',
   password: '',
   token: '',
+  permissions: [],
 };
 
 const getUser: () => User = () => {
@@ -16,9 +19,10 @@ const getUser: () => User = () => {
 export const useUserStore = defineStore('user', {
   state: () => ({
     user: getUser(),
+    isLogged: false,
   }),
   getters: {
-    isLoggedIn: (state) => !!state.user.token,
+    isLoggedIn: (state) => state.isLogged,
   },
   actions: {
     setUser(user: User) {
@@ -26,8 +30,14 @@ export const useUserStore = defineStore('user', {
       localStorage.setItem('user', JSON.stringify(user));
     },
     logout() {
+      const router = useRouter();
       this.user = defaultUser;
+      this.isLogged = false;
       localStorage.removeItem('user');
+      router.push('/');
     },
+    setLogged(isLogged: boolean) {
+      this.isLogged = isLogged;
+    }
   },
 });

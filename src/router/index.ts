@@ -7,6 +7,7 @@ import {
 } from 'vue-router';
 
 import routes from './routes';
+import useApi from 'src/service/apiService';
 
 /*
  * If not building with SSR mode, you can
@@ -34,9 +35,11 @@ export default route(function (/* { store, ssrContext } */) {
     history: createHistory(process.env.VUE_ROUTER_BASE),
   });
 
+  const { isUserAutehnticated } = useApi();
+
   Router.beforeEach((to, from, next) => {
     if (to.meta.requiresAuth) {
-      if (localStorage.getItem('token')) {
+      if (isUserAutehnticated()) {
         next();
       } else {
         next('/login');

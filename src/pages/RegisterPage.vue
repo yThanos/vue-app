@@ -50,6 +50,7 @@
 import { ref } from 'vue';
 import { useRouter } from 'vue-router';
 import { createAcc } from 'src/service/loginService';
+import { User } from 'src/model/interfaces';
 
 const name = ref('');
 const email = ref('');
@@ -58,12 +59,14 @@ const password = ref('');
 const router = useRouter();
 
 function register() {
-  createAcc({
+  const user: User = {
+    id: 0,
     name: name.value,
-    email: email.value,
+    username: email.value,
     password: password.value,
     token: '',
-  });
-  router.push('/');
+    permissions: []
+  };
+  createAcc(user).then(()=>router.push('/login'));
 }
 </script>

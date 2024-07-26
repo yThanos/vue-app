@@ -2,11 +2,11 @@ import axios, { AxiosInstance } from 'axios';
 import { useUserStore } from 'src/stores/userStore';
 
 export default function useApi() {
-  const API = 'http://localhost:8080/'; //'http://172.27.32.177:8080/';
+  const API = 'http://server:8080/'; //'http://172.27.32.177:8080/';
 
   const api: AxiosInstance = axios.create({ baseURL: API });
 
-  const { user } = useUserStore();
+  const { user, logout } = useUserStore();
 
   api.interceptors.request.use((config) => {
     if (user.token) {
@@ -20,17 +20,14 @@ export default function useApi() {
       return response;
     },
     (error) => {
+      logout();
       return Promise.reject(error);
     }
   );
 
-  async function isUserAutehnticated(): Promise<boolean> {
-    const response = await api.get<{ isTokenValid: boolean }>(
-      '/verificaToken/' + user.token
-    );
-    return response.data.isTokenValid;
-    // const { isLoggedIn } = useUserStore();
-    // return isLoggedIn;
+  function isUserAutehnticated(): boolean {
+    const { isLoggedIn } = useUserStore();
+    return isLoggedIn;
   }
 
   return { api, isUserAutehnticated };

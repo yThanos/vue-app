@@ -43,6 +43,7 @@ const email = ref('');
 const password = ref('');
 
 function onSubmit() {
+  console.log(email, password);
   login(email.value, password.value).then((e) => {
     if (e) {
       router.push('/');
